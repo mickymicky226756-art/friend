@@ -558,7 +558,7 @@
   <div class="modal-backdrop welcome-modal" id="welcomeModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
       <h2 id="welcomeTitle">ሰላም ብሮ! 👋 እንተዋወር</h2>
-      <p class="lead">ከመጀመሪያ ስምህን ንገረኝ — እንድታውቅህ።<br>API key አስቀድሜ አዘጋጃለሁ — አንተ ደግሞ ራስህን አስተዋውቅ።</p>
+      <p class="lead">ከመጀመሪያ ስምህን ንገረኝ — እንድታውቅህ።<br>API key ቀድሞ አዘጋጃለሁ — አንተ ስምህን ብቻ ንገረኝ።</p>
 
       <div class="field">
         <div class="step">① ስምህ / Your name<span class="required-star">*</span></div>
@@ -587,6 +587,19 @@
       <p class="hint">ስምህን አስተካክል ወይም ውይይት አጽዳ።</p>
 
       <div class="name-pill" id="namePill"><span class="dot"></span><span id="namePillText">ስም አልተመዘገበም</span></div>
+
+      <div class="field">
+        <label for="apiKeyInput">🔑 Gemini API Key <span id="apiKeyStatus" style="color: var(--text-mute); font-weight: 400; text-transform: none; letter-spacing: 0;">(shared — built-in)</span></label>
+        <div class="input-wrap">
+          <input id="apiKeyInput" type="password" placeholder="(leave empty to use the built-in shared key)" autocomplete="off" spellcheck="false" />
+          <button type="button" class="toggle-vis" id="toggleKeyVis" aria-label="Show/hide key">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-mute); margin-top: 6px; line-height: 1.5;">
+          A shared key is already built into the page. Paste a new one here ONLY if the shared key gets banned — it will be saved in this browser only. Get a fresh key: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" style="color: var(--accent-2);">aistudio.google.com/app/apikey</a>
+        </div>
+      </div>
 
       <div class="field">
         <label for="userNameSettings">ስምህ / Your name</label>
@@ -618,25 +631,27 @@
 <script>
 (() => {
   // -------- Config & State --------
-  // 🌐 Google Gemini API (generativelanguage.googleapis.com)
+  // 🌐 Google Gemini API (Google AI Studio)
   const API_URL = "https://generativelanguage.googleapis.com/v1beta/models";
   const LS_NAME = "broai.userName";
   const LS_INTRO = "broai.userIntro";
   const LS_HIST = "broai.history";
 
-  // 🔐 Shared credentials — hardcoded so end users just introduce themselves.
-  // ⚠️ This key was DISABLED by Google after being on a public site.
-  //    If users see "401 invalid authentication credentials", you MUST get a new one.
+  // 🔐 Shared API key — used for ALL visitors.
+  //    If Google bans this one, paste a new key in ⚙️ Settings (saved per-browser)
+  //    OR replace HARDCODED_API_KEY below and re-upload.
   // 👉 Get a new key: https://aistudio.google.com/app/apikey
-  const HARDCODED_API_KEY = "AQ.Ab8RN6JnxHV1G9-RYuDUNhg3go33sPFJbWP-zXouH3mqA_gfZA";
+  const HARDCODED_API_KEY = "AQ.Ab8RN6KoKkJfKumtwzZX9ucwOzX8NUPOAO5EtGphysw0nKvYpA";
+  const LS_KEY = "broai.apiKey";
 
-  // 🧠 Model — change if your key has access to a different one.
-  // Tried in order; first one to return non-empty wins.
+  // 🧠 Model — tried in order; first one to return non-empty wins.
+  //    All verified working with the key above (as of build time).
   const MODEL_FALLBACKS = [
-    "gemini-3.5-flash",
     "gemini-3.8-flash",
+    "gemini-3.5-flash",
+    "gemini-3.1-flash-lite",
     "gemini-flash-lite-latest",
-    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash",
   ];
 
   // Bro AI Persona — system prompt
@@ -676,9 +691,11 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   const userIntroEl = $("userIntro");
   const welcomeSaveBtn = $("welcomeSave");
   const welcomeStatus = $("welcomeStatus");
-  // Settings — name + intro
+  // Settings — name + intro + key
   const userNameSettingsEl = $("userNameSettings");
   const userIntroSettingsEl = $("userIntroSettings");
+  const apiKeyInputEl = $("apiKeyInput");
+  const apiKeyStatusEl = $("apiKeyStatus");
   const namePillText = $("namePillText");
 
   // -------- State --------
@@ -687,6 +704,33 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   let history = loadHistory();
   let busy = false;
   let typingEl = null;
+
+  // -------- API key status indicator --------
+  function refreshKeyStatus() {
+    if (!apiKeyStatusEl) return;
+    let override = "";
+    try { override = (localStorage.getItem(LS_KEY) || "").trim(); } catch {}
+    if (override) {
+      apiKeyStatusEl.textContent = "· ብጁ key በመጠቀም ላይ ✓";
+      apiKeyStatusEl.style.color = "var(--success)";
+    } else if (HARDCODED_API_KEY && HARDCODED_API_KEY.length > 10) {
+      apiKeyStatusEl.textContent = "· shared key በመጠቀም ላይ ✓";
+      apiKeyStatusEl.style.color = "var(--success)";
+    } else {
+      apiKeyStatusEl.textContent = "· አልተቀመጠም";
+      apiKeyStatusEl.style.color = "var(--text-mute)";
+    }
+  }
+
+  // Show/hide toggle for the settings key input
+  function bindKeyToggle(btnId, inputEl) {
+    const btn = $(btnId);
+    if (!btn || !inputEl) return;
+    btn.addEventListener("click", () => {
+      inputEl.type = inputEl.type === "password" ? "text" : "password";
+    });
+  }
+  bindKeyToggle("toggleKeyVis", apiKeyInputEl);
 
   // -------- Helpers --------
   function loadHistory() {
@@ -701,7 +745,17 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     try { localStorage.setItem(LS_HIST, JSON.stringify(history.slice(-30))); } catch {}
   }
   function getCreds() {
-    return { apiKey: HARDCODED_API_KEY };
+    // Order: per-browser override (paste-in-settings) → hardcoded shared key
+    let apiKey = HARDCODED_API_KEY || "";
+    try {
+      const override = (localStorage.getItem(LS_KEY) || "").trim();
+      if (override) apiKey = override;
+    } catch {}
+    return { apiKey };
+  }
+  function hasKey() {
+    const { apiKey } = getCreds();
+    return apiKey && apiKey.length > 10 && !apiKey.includes("PASTE_");
   }
   function buildSystemPrompt() {
     const nameLine = userName
@@ -808,6 +862,11 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   function openModal() {
     userNameSettingsEl.value = userName;
     userIntroSettingsEl.value = userIntro;
+    if (apiKeyInputEl) {
+      apiKeyInputEl.value = "";
+      apiKeyInputEl.placeholder = "(የተካተተ key አለ — ለመቀየር አዲስ ለጥፍ ወይም ባዶ ይተዉ)";
+    }
+    refreshKeyStatus();
     statusLine.textContent = "";
     statusLine.className = "status-line";
     refreshNamePill();
@@ -871,6 +930,14 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     }
     localStorage.setItem(LS_INTRO, newIntro);
     userIntro = newIntro;
+
+    // API key — only update if user actually typed something
+    const typedKey = (apiKeyInputEl?.value || "").trim();
+    if (typedKey) {
+      localStorage.setItem(LS_KEY, typedKey);
+      refreshKeyStatus();
+    }
+
     statusLine.textContent = "✅ ተቆጥቷል — አሁን ልንወያይ";
     statusLine.className = "status-line ok";
     showToast("Settings saved · ተቆጥቷል", "success");
@@ -896,18 +963,17 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   });
 
   // -------- Send --------
-  // Gemini error code → friendly message
+  // Gemini error → friendly message
   function decodeGeminiError(errObj) {
     if (!errObj) return null;
     const code = errObj.code;
     const msg = errObj.message || "Unknown error";
-    // Detect the specific "key was disabled because it was public" error
     const isDeadKey = msg.includes("OAuth 2") || msg.includes("authentication credentials") ||
                       errObj?.details?.[0]?.reason === "ACCESS_TOKEN_TYPE_UNSUPPORTED";
     const codeMap = {
       400: "⚙️ Bad request — prompt ወይም model name ን ተመልከት",
       401: isDeadKey
-        ? "🚨 API KEY ተመለሰው — Google ይህን key አስረድቷል (public site ላይ ታይቶ ነበር)። 👉 aistudio.google.com/app/apikey ሄዶ አዲስ key ፍጠር → index.html ላይ HARDCODED_API_KEY ቀይር"
+        ? "🚨 API key ተሰርዟል — aistudio.google.com/app/apikey ሄዶ አዲስ key ፍጠር እና HARDCODED_API_KEY ቀይር"
         : "🔑 Invalid API key",
       403: "🚫 Permission denied — API key የተገደበ ሊሆን ይችላል",
       404: "❓ Model not found — MODEL_FALLBACKS ን ተመልከት",
@@ -919,8 +985,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     return `${friendly}`;
   }
 
-  // Build Gemini request body from messages array
-  // Gemini format: { contents: [{role, parts:[{text}]}], systemInstruction?: {parts:[{text}]}, generationConfig: {...} }
+  // Build Gemini request body
   function buildGeminiBody(systemText, messages, model) {
     const contents = messages.map(m => ({
       role: m.role === "assistant" ? "model" : "user",
@@ -945,7 +1010,6 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   function extractGeminiReply(data) {
     const parts = data?.candidates?.[0]?.content?.parts;
     if (!Array.isArray(parts)) return "";
-    // Concatenate all text parts (skip thoughtSignature-only parts)
     return parts
       .map(p => (p && typeof p.text === "string" ? p.text : ""))
       .filter(Boolean)
@@ -965,10 +1029,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
 
     if (!res.ok) {
       let payload = null;
-      try {
-        payload = await res.json();
-      } catch {}
-      // Use the friendly decoder so 401 with the "key disabled" pattern shows the right message
+      try { payload = await res.json(); } catch {}
       const friendly = decodeGeminiError(payload?.error) || `HTTP ${res.status}`;
       const err = new Error(friendly);
       err._http = res.status;
@@ -983,8 +1044,8 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (!text || busy) return;
 
     const { apiKey } = getCreds();
-    if (!apiKey || apiKey === "PASTE_YOUR_GEMINI_API_KEY_HERE" || apiKey.includes("PASTE_")) {
-      const msg = "⚠️ Gemini API key አልተቀመጠም። index.html ን ክፈት → 'PASTE_YOUR_GEMINI_API_KEY_HERE' ን ተክትቶ አዲስ key ከ aistudio.google.com/app/apikey አስገባ።";
+    if (!hasKey()) {
+      const msg = "🔑 API key የለም — ⚙️ Settings ላይ አዲስ key አስገባ ወይም HARDCODED_API_KEY ተካትቷል መሆኑን አረጋግጥ";
       showToast(msg, "error");
       addBubble("friend", msg);
       return;
@@ -1136,6 +1197,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   // -------- Init --------
   function init() {
     renderAll();
+    refreshKeyStatus();
     // First run: must introduce themselves
     if (!userName) {
       welcomeModal.classList.add("open");
