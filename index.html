@@ -625,12 +625,10 @@
   const LS_HIST = "broai.history";
 
   // 🔐 Shared credentials — hardcoded so end users just introduce themselves.
-  // ⚠️ If you host this on a public URL, Google will auto-disable any key
-  //    that's visible in the page source. Get a new one and paste it below.
-  //
+  // ⚠️ This key was DISABLED by Google after being on a public site.
+  //    If users see "401 invalid authentication credentials", you MUST get a new one.
   // 👉 Get a new key: https://aistudio.google.com/app/apikey
-  // 👉 For long-term hosting, use a backend proxy to hide the key.
-  const HARDCODED_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
+  const HARDCODED_API_KEY = "AQ.Ab8RN6JnxHV1G9-RYuDUNhg3go33sPFJbWP-zXouH3mqA_gfZA";
 
   // 🧠 Model — change if your key has access to a different one.
   // Tried in order; first one to return non-empty wins.
@@ -903,9 +901,14 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (!errObj) return null;
     const code = errObj.code;
     const msg = errObj.message || "Unknown error";
+    // Detect the specific "key was disabled because it was public" error
+    const isDeadKey = msg.includes("OAuth 2") || msg.includes("authentication credentials") ||
+                      errObj?.details?.[0]?.reason === "ACCESS_TOKEN_TYPE_UNSUPPORTED";
     const codeMap = {
       400: "⚙️ Bad request — prompt ወይም model name ን ተመልከት",
-      401: "🔑 API key ተከለከለ — Google exposed keys በራስ-ሰር ያሰርዳል። አዲስ key ከ aistudio.google.com/app/apikey ይዙ።",
+      401: isDeadKey
+        ? "🚨 API KEY ተመለሰው — Google ይህን key አስረድቷል (public site ላይ ታይቶ ነበር)። 👉 aistudio.google.com/app/apikey ሄዶ አዲስ key ፍጠር → index.html ላይ HARDCODED_API_KEY ቀይር"
+        : "🔑 Invalid API key",
       403: "🚫 Permission denied — API key የተገደበ ሊሆን ይችላል",
       404: "❓ Model not found — MODEL_FALLBACKS ን ተመልከት",
       429: "⏱️ Rate limit — ቆይተህ እንደገና ሞክር",
@@ -913,7 +916,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
       503: "🔥 Service unavailable — እንደገና ሞክር",
     };
     const friendly = codeMap[code] || `API error ${code}`;
-    return `${friendly} · ${msg}`;
+    return `${friendly}`;
   }
 
   // Build Gemini request body from messages array
@@ -961,14 +964,13 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     });
 
     if (!res.ok) {
-      let errTxt = `HTTP ${res.status}`;
       let payload = null;
       try {
-        const j = await res.json();
-        payload = j;
-        errTxt = j?.error?.message || j?.message || errTxt;
+        payload = await res.json();
       } catch {}
-      const err = new Error(errTxt);
+      // Use the friendly decoder so 401 with the "key disabled" pattern shows the right message
+      const friendly = decodeGeminiError(payload?.error) || `HTTP ${res.status}`;
+      const err = new Error(friendly);
       err._http = res.status;
       err._payload = payload;
       throw err;
