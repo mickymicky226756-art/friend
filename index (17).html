@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>የኔ ጓደኛ (Bro AI) — My Best Friend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Base & Reset ---------- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-0: #0f1320;
+    --bg-1: #161b2e;
+    --bg-2: #1d233a;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-2: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #e9ecf3;
+    --text-dim: #a4abc1;
+    --text-mute: #6c7493;
+    --accent: #5b8def;
+    --accent-2: #6aa3ff;
+    --accent-glow: rgba(91, 141, 239, 0.45);
+    --user-bubble: linear-gradient(135deg, #3a76f0 0%, #5b8def 100%);
+    --friend-bubble: linear-gradient(135deg, #232a44 0%, #1b2138 100%);
+    --success: #34d399;
+    --danger: #ef4444;
+    --warn: #f59e0b;
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-pill: 999px;
+  }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Noto Sans Ethiopic', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(91, 141, 239, 0.18), transparent 60%),
+      radial-gradient(1000px 500px at 110% 110%, rgba(124, 58, 237, 0.18), transparent 60%),
+      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.55;
+  }
+
+  /* ---------- App Shell ---------- */
+  .app {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    max-width: 920px; margin: 0 auto;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+  @media (max-width: 600px) {
+    .app { border: none; }
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    position: relative;
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border-bottom: 1px solid var(--border);
+    z-index: 5;
+  }
+  .header::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+  }
+  .avatar {
+    position: relative;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5b8def 0%, #7c3aed 100%);
+    display: grid; place-items: center;
+    font-size: 22px;
+    box-shadow: 0 4px 14px rgba(91, 141, 239, 0.4);
+    flex-shrink: 0;
+  }
+  .avatar::after {
+    content: ""; position: absolute; right: -2px; bottom: -2px;
+    width: 13px; height: 13px;
+    background: var(--success);
+    border: 2.5px solid var(--bg-1);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2); }
+    50% { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0.05); }
+  }
+  .title-wrap { flex: 1; min-width: 0; }
+  .title {
+    font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .subtitle {
+    font-size: 12px; color: var(--text-dim);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .subtitle .dot {
+    width: 6px; height: 6px; background: var(--success); border-radius: 50%;
+    box-shadow: 0 0 6px var(--success);
+  }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 12px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .icon-btn:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+  .icon-btn:active { transform: scale(0.96); }
+  .icon-btn svg { width: 18px; height: 18px; }
+
+  /* ---------- Chat Area ---------- */
+  .chat {
+    flex: 1; overflow-y: auto;
+    padding: 20px 14px 12px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.12) transparent;
+  }
+  .chat::-webkit-scrollbar { width: 6px; }
+  .chat::-webkit-scrollbar-track { background: transparent; }
+  .chat::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+  }
+  .chat::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  .date-divider {
+    text-align: center;
+    margin: 6px 0 14px;
+  }
+  .date-divider span {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+
+  .msg-row {
+    display: flex; gap: 8px;
+    margin-bottom: 10px;
+    animation: msgIn 0.35s cubic-bezier(0.2, 0.7, 0.3, 1.2);
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .msg-row.friend { justify-content: flex-start; }
+  .msg-row.user { justify-content: flex-end; }
+
+  .msg-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5b8def, #7c3aed);
+    display: grid; place-items: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    align-self: flex-end;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .msg-avatar.user-avatar {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    font-weight: 600;
+  }
+  .bubble {
+    max-width: min(78%, 520px);
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.55;
+    position: relative;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    box-shadow: var(--shadow-md);
+  }
+  .friend .bubble {
+    background: var(--friend-bubble);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+  }
+  .user .bubble {
+    background: var(--user-bubble);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 6px 18px var(--accent-glow);
+  }
+  .meta {
+    font-size: 10.5px;
+    color: var(--text-mute);
+    margin-top: 4px;
+    text-align: right;
+    opacity: 0.8;
+  }
+  .user .meta { color: rgba(255,255,255,0.7); }
+
+  /* ---------- Typing Indicator ---------- */
+  .typing {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 2px;
+  }
+  .typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--text-dim);
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* ---------- Input Area ---------- */
+  .composer {
+    padding: 12px 14px 16px;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.25));
+    border-top: 1px solid var(--border);
+  }
+  .composer-inner {
+    display: flex; align-items: flex-end; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 6px 6px 6px 14px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .composer-inner:focus-within {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+  .composer textarea {
+    flex: 1; min-height: 24px; max-height: 140px;
+    background: transparent;
+    border: none; outline: none; resize: none;
+    color: var(--text);
+    font-family: inherit; font-size: 15px;
+    line-height: 1.5;
+    padding: 8px 0;
+  }
+  .composer textarea::placeholder { color: var(--text-mute); }
+  .send-btn {
+    width: 40px; height: 40px;
+    border: none; outline: none;
+    background: linear-gradient(135deg, #3a76f0, #5b8def);
+    color: #fff;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+  .send-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px var(--accent-glow);
+  }
+  .send-btn:active { transform: scale(0.95); }
+  .send-btn:disabled {
+    opacity: 0.5; cursor: not-allowed;
+    background: var(--surface-2);
+    box-shadow: none;
+  }
+  .send-btn svg { width: 18px; height: 18px; }
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(8, 10, 20, 0.7);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.2s ease;
+    padding: 16px;
+  }
+  .modal-backdrop.open { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    width: 100%; max-width: 440px;
+    background: linear-gradient(180deg, #1d233a, #161b2e);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    box-shadow: var(--shadow-lg);
+    padding: 22px;
+    animation: pop 0.25s cubic-bezier(0.2, 0.7, 0.3, 1.2);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal h2 {
+    font-size: 18px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .modal p.hint {
+    font-size: 13px; color: var(--text-dim);
+    margin-bottom: 18px;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 12px; font-weight: 500;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  .field .input-wrap {
+    position: relative;
+    display: flex; align-items: center;
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.2s ease;
+  }
+  .field .input-wrap:focus-within { border-color: var(--accent); }
+  .field input {
+    flex: 1;
+    width: 100%;
+    background: transparent;
+    border: none; outline: none;
+    color: var(--text);
+    font-family: 'Inter', monospace; font-size: 14px;
+    padding: 12px 14px;
+    letter-spacing: 0.02em;
+  }
+  .toggle-vis {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--text-dim);
+    padding: 0 12px;
+    display: grid; place-items: center;
+  }
+  .toggle-vis:hover { color: var(--text); }
+  .toggle-vis svg { width: 18px; height: 18px; }
+  .modal-actions {
+    display: flex; gap: 10px; justify-content: flex-end;
+    margin-top: 18px;
+  }
+  .btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn.secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .btn.secondary:hover { background: var(--surface-2); }
+  .btn.primary {
+    background: linear-gradient(135deg, #3a76f0, #5b8def);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+  .btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px var(--accent-glow);
+  }
+  .status-line {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-dim);
+    min-height: 16px;
+  }
+  .status-line.ok { color: var(--success); }
+  .status-line.err { color: var(--danger); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 90px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(20, 25, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 13.5px;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 200;
+    transition: all 0.3s ease;
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { border-color: rgba(239, 68, 68, 0.4); }
+  .toast.success { border-color: rgba(52, 211, 153, 0.4); }
+
+  /* ---------- Welcome Animation ---------- */
+  .welcome {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-dim);
+    font-size: 13.5px;
+  }
+  .welcome .big {
+    font-size: 32px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, #5b8def, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+  .welcome .sub { color: var(--text-mute); font-size: 12.5px; margin-top: 4px; }
+
+  /* ---------- Welcome / Onboarding Modal ---------- */
+  .welcome-modal .modal {
+    max-width: 480px;
+    text-align: center;
+  }
+  .welcome-modal .modal h2 {
+    font-size: 22px;
+    background: linear-gradient(135deg, #5b8def, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .welcome-modal .modal .lead {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin: 6px 0 18px;
+  }
+  .welcome-modal .modal .lead .name {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .welcome-modal .field { text-align: left; }
+  .welcome-modal textarea {
+    width: 100%;
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 12px 14px;
+    outline: none;
+    resize: vertical;
+    min-height: 70px;
+    transition: border-color 0.2s ease;
+  }
+  .welcome-modal textarea:focus { border-color: var(--accent); }
+  .welcome-modal .step {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-mute);
+    margin-bottom: 6px;
+  }
+  .welcome-modal .modal-actions {
+    justify-content: center;
+    margin-top: 22px;
+  }
+  .welcome-modal .modal-actions .btn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+  .welcome-modal .required-star {
+    color: #f87171;
+    margin-left: 2px;
+  }
+  .name-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .name-pill .dot {
+    width: 6px; height: 6px; background: var(--success); border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="avatar">🤝</div>
+      <div class="title-wrap">
+        <div class="title">የኔ ጓደኛ (Bro AI)</div>
+        <div class="subtitle"><span class="dot"></span><span id="statusText">እያወራ ነው · online</span></div>
+      </div>
+      <button class="icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Chat -->
+    <main class="chat" id="chat">
+      <div class="date-divider"><span>ዛሬ · Today</span></div>
+      <div class="welcome" id="welcome">
+        <div class="big">ሰላም ብሮ 👋</div>
+        <div>እኔ ጓደኛህ� ነኝ — ንገረኝ ምን ነው አለን?</div>
+        <div class="sub">ማንኛውንም ነገር ብትጠይቀኝ እንሞግራለን</div>
+      </div>
+    </main>
+
+    <!-- Composer -->
+    <div class="composer">
+      <div class="composer-inner">
+        <textarea id="input" rows="1" placeholder="መልዕክት ጻፍ… (Enter to send, Shift+Enter for new line)" maxlength="4000"></textarea>
+        <button class="send-btn" id="sendBtn" aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome / Onboarding Modal (shown on first run) -->
+  <div class="modal-backdrop welcome-modal" id="welcomeModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+      <h2 id="welcomeTitle">ሰላም ብሮ! 👋 እንተዋወር</h2>
+      <p class="lead">ከመጀመሪያ ስምህን ንገረኝ — እንድታውቅህ።<br>API key አስቀድሜ አዘጋጃለሁ — አንተ ደግሞ ራስህን አስተዋውቅ።</p>
+
+      <div class="field">
+        <div class="step">① ስምህ / Your name<span class="required-star">*</span></div>
+        <div class="input-wrap">
+          <input id="userName" type="text" placeholder="ለምሳሌ፡ አበበ" autocomplete="off" maxlength="40" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="step">② ራስህን አስተዋውቅ · Tell me about yourself <span style="color: var(--text-mute); font-weight: 400; text-transform: none; letter-spacing: 0;">(optional)</span></div>
+        <textarea id="userIntro" placeholder="ስለ ራስህ ትንሽ ንገረኝ — ሥራ፣ ህልም፣ ምን ይወዳል…"></textarea>
+      </div>
+
+      <div class="status-line" id="welcomeStatus"></div>
+
+      <div class="modal-actions">
+        <button class="btn primary" id="welcomeSave" type="button">ጀምር · Get Started →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">⚙️ Settings · ቅንብር</h2>
+      <p class="hint">ስምህን አስተካክል ወይም ውይይት አጽዳ።</p>
+
+      <div class="name-pill" id="namePill"><span class="dot"></span><span id="namePillText">ስም አልተመዘገበም</span></div>
+
+      <div class="field">
+        <label for="userNameSettings">ስምህ / Your name</label>
+        <div class="input-wrap">
+          <input id="userNameSettings" type="text" placeholder="ስምህን አስተካክል" autocomplete="off" maxlength="40" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="userIntroSettings">ራስህን አስተዋውቅ (optional)</label>
+        <div class="input-wrap" style="align-items: flex-start;">
+          <textarea id="userIntroSettings" rows="3" placeholder="ስለ ራስህ ትንሽ ንገረኝ…" style="background: transparent; border: none; outline: none; color: var(--text); font-family: inherit; font-size: 14px; padding: 12px 14px; width: 100%; resize: vertical;"></textarea>
+        </div>
+      </div>
+
+      <div class="status-line" id="statusLine"></div>
+
+      <div class="modal-actions">
+        <button class="btn secondary" id="clearBtn" type="button">Clear Chat</button>
+        <button class="btn secondary" id="testBtn" type="button">🔌 Test API</button>
+        <button class="btn primary" id="saveBtn" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  // -------- Config & State --------
+  // 🌐 Google Gemini API (generativelanguage.googleapis.com)
+  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models";
+  const LS_NAME = "broai.userName";
+  const LS_INTRO = "broai.userIntro";
+  const LS_HIST = "broai.history";
+
+  // 🔐 Shared credentials — hardcoded so end users just introduce themselves.
+  // ⚠️ Do NOT publish this file publicly. Anyone with the file can read the key.
+  // To rotate, update the value below and re-distribute the file.
+  const HARDCODED_API_KEY = "AQ.Ab8RN6JnxHV1G9-RYuDUNhg3go33sPFJbWP-zXouH3mqA_gfZA";
+
+  // 🧠 Model — change if your key has access to a different one.
+  // Tried in order; first one to return non-empty wins.
+  const MODEL_FALLBACKS = [
+    "gemini-3.5-flash",
+    "gemini-3.8-flash",
+    "gemini-flash-lite-latest",
+    "gemini-2.5-flash-lite",
+  ];
+
+  // Bro AI Persona — system prompt
+  const SYSTEM_PROMPT = `You are "የኔ ጓደኛ" (My Best Friend Bro AI) — a close Ethiopian best friend to the user. \
+You speak naturally in Amharic and Amharlish (አማርሊሽ), blending casual Addis Ababa street slang.
+
+Personality rules (NEVER break these):
+- You are witty, funny, supportive, chill — like a true homie who has the user's back.
+- You NEVER speak like a robotic customer service agent, formal assistant, or textbook.
+- You casually use words like: አቦ, ብሮ, ተወው እስቲ, እንዴ, ሃሌ, ምን ነው አለን, አይደለም አቦ, ይቅርታ, ቻ, እሺ ጓደኛ, ያም ነው, ቻ ቻ, እንቁላለን, ተረጋግታ, በሄድኩ, ላይ ነው, ጥሩ ነው, እባክህ, አለህ? — naturally and only when it fits.
+- You mix English words in when the vibe calls for it (Amharlish), but the default is Amharic.
+- You ask short, friendly follow-up questions to keep the convo alive.
+- You give real talk: if something is dumb, say it with love. If something is genius, hype it up.
+- You remember what the user said earlier in the conversation and reference it.
+- Keep replies conversational — usually 1-4 sentences, occasionally longer when storytelling or giving advice.
+- You never use bullet points, JSON, or formal structure. Just talk like a friend.
+- Default opener style: casual greeting + tiny acknowledgment of what they said + a quick reply + soft follow-up.
+
+If the user writes in English, reply mostly in Amharlish. If they write in Amharic, lean Amharic with light Amharlish seasoning.`;
+
+  // -------- DOM --------
+  const $ = (id) => document.getElementById(id);
+  const chatEl = $("chat");
+  const inputEl = $("input");
+  const sendBtn = $("sendBtn");
+  const settingsBtn = $("settingsBtn");
+  const modal = $("modal");
+  const saveBtn = $("saveBtn");
+  const clearBtn = $("clearBtn");
+  const statusLine = $("statusLine");
+  const toastEl = $("toast");
+  const welcomeEl = $("welcome");
+  const statusText = $("statusText");
+  // Welcome modal
+  const welcomeModal = $("welcomeModal");
+  const userNameEl = $("userName");
+  const userIntroEl = $("userIntro");
+  const welcomeSaveBtn = $("welcomeSave");
+  const welcomeStatus = $("welcomeStatus");
+  // Settings — name + intro
+  const userNameSettingsEl = $("userNameSettings");
+  const userIntroSettingsEl = $("userIntroSettings");
+  const namePillText = $("namePillText");
+
+  // -------- State --------
+  let userName = localStorage.getItem(LS_NAME) || "";
+  let userIntro = localStorage.getItem(LS_INTRO) || "";
+  let history = loadHistory();
+  let busy = false;
+  let typingEl = null;
+
+  // -------- Helpers --------
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(LS_HIST);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+  }
+  function saveHistory() {
+    try { localStorage.setItem(LS_HIST, JSON.stringify(history.slice(-30))); } catch {}
+  }
+  function getCreds() {
+    return { apiKey: HARDCODED_API_KEY };
+  }
+  function buildSystemPrompt() {
+    const nameLine = userName
+      ? `The user's name is: ${userName}. Use their name naturally in conversation — at the first reply, greet them by name. Don't overuse it; sprinkle it like a real friend would.`
+      : "The user has not told you their name yet — gently ask once.";
+    const introLine = userIntro
+      ? `What the user told you about themselves: """${userIntro}""". Reference these details naturally when relevant.`
+      : "";
+    return `${SYSTEM_PROMPT}\n\n${nameLine}\n${introLine}`.trim();
+  }
+  function nowTime() {
+    const d = new Date();
+    let h = d.getHours();
+    const m = d.getMinutes().toString().padStart(2, "0");
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  function showToast(msg, type = "") {
+    toastEl.textContent = msg;
+    toastEl.className = "toast show " + type;
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => {
+      toastEl.className = "toast " + type;
+    }, 3200);
+  }
+
+  function scrollToBottom() {
+    requestAnimationFrame(() => {
+      chatEl.scrollTop = chatEl.scrollHeight;
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // -------- Render --------
+  function renderAll() {
+    // remove existing message rows but keep date divider + welcome
+    chatEl.querySelectorAll(".msg-row").forEach(n => n.remove());
+    if (history.length === 0) {
+      welcomeEl.style.display = "";
+    } else {
+      welcomeEl.style.display = "none";
+    }
+    history.forEach(m => addBubble(m.role, m.content, false));
+    scrollToBottom();
+  }
+
+  function addBubble(role, content, animate = true) {
+    const row = document.createElement("div");
+    row.className = "msg-row " + (role === "user" ? "user" : "friend");
+    if (!animate) row.style.animation = "none";
+    const avatar = document.createElement("div");
+    avatar.className = "msg-avatar " + (role === "user" ? "user-avatar" : "");
+    avatar.textContent = role === "user" ? "አንተ" : "🤝";
+    const bubble = document.createElement("div");
+    const inner = document.createElement("div");
+    inner.className = "bubble";
+    inner.textContent = content; // safe — uses textContent
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = (role === "user" ? "አንተ · " : "ጓደኛ · ") + nowTime();
+    bubble.appendChild(inner);
+    bubble.appendChild(meta);
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    chatEl.appendChild(row);
+    if (animate) scrollToBottom();
+  }
+
+  function showTyping() {
+    if (typingEl) return;
+    typingEl = document.createElement("div");
+    typingEl.className = "msg-row friend";
+    typingEl.innerHTML = `
+      <div class="msg-avatar">🤝</div>
+      <div class="bubble">
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div>
+    `;
+    chatEl.appendChild(typingEl);
+    scrollToBottom();
+  }
+  function hideTyping() {
+    if (typingEl) { typingEl.remove(); typingEl = null; }
+  }
+
+  // -------- Composer auto-resize --------
+  function autoResize() {
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+  }
+  inputEl.addEventListener("input", autoResize);
+
+  // -------- Modal --------
+  function openModal() {
+    userNameSettingsEl.value = userName;
+    userIntroSettingsEl.value = userIntro;
+    statusLine.textContent = "";
+    statusLine.className = "status-line";
+    refreshNamePill();
+    modal.classList.add("open");
+    setTimeout(() => userNameSettingsEl.focus(), 50);
+  }
+  function closeModal() { modal.classList.remove("open"); }
+
+  settingsBtn.addEventListener("click", openModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+  });
+
+  $("testBtn").addEventListener("click", testApi);
+
+  // Welcome modal handlers
+  function setWelcomeStatus(text, kind = "") {
+    welcomeStatus.textContent = text;
+    welcomeStatus.className = "status-line " + kind;
+  }
+
+  welcomeSaveBtn.addEventListener("click", async () => {
+    const name = userNameEl.value.trim();
+    const intro = userIntroEl.value.trim();
+
+    if (!name) {
+      setWelcomeStatus("⚠️ ስምህን አስገባ ብሮ", "err");
+      userNameEl.focus();
+      return;
+    }
+
+    welcomeSaveBtn.disabled = true;
+    setWelcomeStatus("በማዘጋጀት ላይ…", "ok");
+
+    // Persist user info
+    localStorage.setItem(LS_NAME, name);
+    localStorage.setItem(LS_INTRO, intro);
+    userName = name;
+    userIntro = intro;
+
+    // Close welcome modal
+    welcomeModal.classList.remove("open");
+    showToast("ተቆጥቷል · ሰላም " + name + "!", "success");
+
+    // Compose the user's introduction message
+    const introMsg = intro && intro.length > 0
+      ? `ሰላም! ስሜ ${name} ነው። ${intro}`
+      : `ሰላም! ስሜ ${name} ነው። አንተ ማን ነህ? እንድታውቀኝ ትንሽ ንገረኝ።`;
+
+    // Auto-send the introduction so the friend greets back
+    await sendMessage(introMsg);
+  });
+
+  saveBtn.addEventListener("click", () => {
+    const newName = userNameSettingsEl.value.trim();
+    const newIntro = userIntroSettingsEl.value.trim();
+    if (newName) {
+      localStorage.setItem(LS_NAME, newName);
+      userName = newName;
+    }
+    localStorage.setItem(LS_INTRO, newIntro);
+    userIntro = newIntro;
+    statusLine.textContent = "✅ ተቆጥቷል — አሁን ልንወያይ";
+    statusLine.className = "status-line ok";
+    showToast("Settings saved · ተቆጥቷል", "success");
+    refreshNamePill();
+    setTimeout(closeModal, 700);
+  });
+
+  function refreshNamePill() {
+    if (userName) {
+      namePillText.textContent = "ስም · " + userName;
+    } else {
+      namePillText.textContent = "ስም አልተመዘገበም";
+    }
+  }
+
+  clearBtn.addEventListener("click", () => {
+    if (!confirm("ሁሉም ውይይት ላጥም? Clear all messages?")) return;
+    history = [];
+    saveHistory();
+    renderAll();
+    closeModal();
+    showToast("Chat cleared", "success");
+  });
+
+  // -------- Send --------
+  // Gemini error code → friendly message
+  function decodeGeminiError(errObj) {
+    if (!errObj) return null;
+    const code = errObj.code;
+    const msg = errObj.message || "Unknown error";
+    const codeMap = {
+      400: "⚙️ Bad request — prompt ወይም model name ን ተመልከት",
+      401: "🔑 Invalid API key",
+      403: "🚫 Permission denied — API key የተገደበ ሊሆን ይችላል",
+      404: "❓ Model not found — MODEL_FALLBACKS ን ተመልከት",
+      429: "⏱️ Rate limit — ቆይተህ እንደገና ሞክር",
+      500: "🔥 Server error — እንደገና ሞክር",
+      503: "🔥 Service unavailable — እንደገና ሞክር",
+    };
+    const friendly = codeMap[code] || `API error ${code}`;
+    return `${friendly} · ${msg}`;
+  }
+
+  // Build Gemini request body from messages array
+  // Gemini format: { contents: [{role, parts:[{text}]}], systemInstruction?: {parts:[{text}]}, generationConfig: {...} }
+  function buildGeminiBody(systemText, messages, model) {
+    const contents = messages.map(m => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: m.content }],
+    }));
+    const body = {
+      contents,
+      generationConfig: {
+        temperature: 0.9,
+        topP: 0.95,
+        topK: 64,
+        maxOutputTokens: 1024,
+      },
+    };
+    if (systemText) {
+      body.systemInstruction = { parts: [{ text: systemText }] };
+    }
+    return body;
+  }
+
+  // Extract text reply from Gemini response
+  function extractGeminiReply(data) {
+    const parts = data?.candidates?.[0]?.content?.parts;
+    if (!Array.isArray(parts)) return "";
+    // Concatenate all text parts (skip thoughtSignature-only parts)
+    return parts
+      .map(p => (p && typeof p.text === "string" ? p.text : ""))
+      .filter(Boolean)
+      .join("\n")
+      .trim();
+  }
+
+  async function callGemini(systemText, messages, apiKey, model) {
+    const body = buildGeminiBody(systemText, messages, model);
+    const url = `${API_URL}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      let errTxt = `HTTP ${res.status}`;
+      let payload = null;
+      try {
+        const j = await res.json();
+        payload = j;
+        errTxt = j?.error?.message || j?.message || errTxt;
+      } catch {}
+      const err = new Error(errTxt);
+      err._http = res.status;
+      err._payload = payload;
+      throw err;
+    }
+
+    return await res.json();
+  }
+
+  async function sendMessage(text) {
+    if (!text || busy) return;
+
+    const { apiKey } = getCreds();
+    if (!apiKey) {
+      showToast("⚠️ API key አልተገኘም — owner ን አነጋግር", "error");
+      return;
+    }
+
+    // Add user message
+    history.push({ role: "user", content: text });
+    addBubble("user", text);
+    saveHistory();
+    welcomeEl.style.display = "none";
+
+    busy = true;
+    sendBtn.disabled = true;
+    statusText.textContent = "እየተዋወረ ነው · typing…";
+    showTyping();
+
+    try {
+      // Build messages for Gemini (system goes in systemInstruction, not in contents)
+      const recent = history.slice(-20);
+      const sysText = buildSystemPrompt();
+      const msgs = recent.map(m => ({ role: m.role, content: m.content }));
+
+      // Try each model in fallback order
+      let data = null;
+      let usedModel = null;
+      let lastErr = null;
+      for (const model of MODEL_FALLBACKS) {
+        try {
+          const result = await callGemini(sysText, msgs, apiKey, model);
+          const reply = extractGeminiReply(result);
+          if (reply) {
+            data = result;
+            usedModel = model;
+            break;
+          }
+          // Empty content but no HTTP error — try next model
+          lastErr = new Error(`Model ${model} returned no content`);
+          lastErr._payload = result;
+        } catch (e) {
+          lastErr = e;
+          // 4xx errors (bad auth, bad params) — don't loop forever
+          if (e._http && e._http >= 400 && e._http < 500) break;
+        }
+      }
+
+      hideTyping();
+
+      if (!data) {
+        if (lastErr?._payload) {
+          console.error("Gemini debug payload:", JSON.stringify(lastErr._payload, null, 2));
+        }
+        throw lastErr || new Error("All models failed");
+      }
+
+      const cleanReply = String(extractGeminiReply(data)).trim();
+      if (!cleanReply) throw new Error("Empty response from API");
+
+      console.log("✓ Reply from model:", usedModel);
+
+      history.push({ role: "assistant", content: cleanReply });
+      addBubble("friend", cleanReply);
+      saveHistory();
+      statusText.textContent = "እያወራ ነው · online";
+    } catch (err) {
+      hideTyping();
+      const msg = err?.message || "Unknown error";
+      const friendly =
+        /api.?key|invalid.?key|401|403|permission/i.test(msg)
+          ? "🔑 API key ችግር አለው — key ትክክል መሆኑን አረጋግጥ"
+          : /rate.?limit|429/i.test(msg)
+          ? "⏱️ Rate limit — ቆይተህ እንደገና ሞክር"
+          : /network|failed.?fetch|networkerror/i.test(msg)
+          ? "📡 ኔትዎርክ ችግር አለው — እንደገና ሞክር"
+          : /model.?not.?found|404/i.test(msg)
+          ? "❓ Model not found — owner ን አነጋግር"
+          : /safety|blocked|content/i.test(msg)
+          ? "🛡️ Content ተከለከለ — ሌላ ይሞክር"
+          : `😵 ችግር: ${msg} (console ላይ ዝርዝር ተመልክቷል)`;
+      showToast(friendly, "error");
+      addBubble("friend", friendly);
+      statusText.textContent = "ላይሆን ተቀይሯል · error";
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      setTimeout(() => { if (!busy) statusText.textContent = "እያወራ ነው · online"; }, 2000);
+      inputEl.focus();
+    }
+  }
+
+  // -------- Test API (debug helper) --------
+  async function testApi() {
+    const { apiKey } = getCreds();
+    if (!apiKey) {
+      statusLine.textContent = "⚠️ API key የለም";
+      statusLine.className = "status-line err";
+      return;
+    }
+    statusLine.textContent = "🔄 በመሞከር ላይ…";
+    statusLine.className = "status-line";
+    try {
+      const msgs = [{ role: "user", content: "ሰላም" }];
+      let data = null;
+      let usedModel = null;
+      let lastErr = null;
+      for (const model of MODEL_FALLBACKS) {
+        try {
+          const result = await callGemini("Reply briefly.", msgs, apiKey, model);
+          const reply = extractGeminiReply(result);
+          if (reply) { data = result; usedModel = model; break; }
+          lastErr = new Error(`Model ${model} returned no content`);
+          lastErr._payload = result;
+        } catch (e) {
+          lastErr = e;
+          if (e._http && e._http >= 400 && e._http < 500) break;
+        }
+      }
+      if (!data) {
+        if (lastErr?._payload) {
+          console.error("Test API payload:", JSON.stringify(lastErr._payload, null, 2));
+        }
+        throw lastErr || new Error("All models failed");
+      }
+      const reply = String(extractGeminiReply(data)).trim();
+      statusLine.textContent = `✅ OK · model=${usedModel} · reply: "${reply.slice(0, 60)}${reply.length > 60 ? "…" : ""}"`;
+      statusLine.className = "status-line ok";
+    } catch (e) {
+      statusLine.textContent = `❌ ${e.message || e}`;
+      statusLine.className = "status-line err";
+    }
+  }
+
+  // Send from the input box
+  function send() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    inputEl.value = "";
+    autoResize();
+    sendMessage(text);
+  }
+
+  sendBtn.addEventListener("click", send);
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+
+  // -------- Init --------
+  function init() {
+    renderAll();
+    // First run: must introduce themselves
+    if (!userName) {
+      welcomeModal.classList.add("open");
+      setTimeout(() => userNameEl.focus(), 100);
+    } else {
+      inputEl.focus();
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
