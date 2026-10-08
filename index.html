@@ -458,10 +458,6 @@
     font-size: 14px;
     margin: 6px 0 18px;
   }
-  .welcome-modal .modal .lead .name {
-    color: var(--text);
-    font-weight: 600;
-  }
   .welcome-modal .field { text-align: left; }
   .welcome-modal textarea {
     width: 100%;
@@ -525,7 +521,7 @@
       <button class="icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
         </svg>
       </button>
     </header>
@@ -535,7 +531,7 @@
       <div class="date-divider"><span>ዛሬ · Today</span></div>
       <div class="welcome" id="welcome">
         <div class="big">ሰላም ብሮ 👋</div>
-        <div>እኔ ጓደኛህ� ነኝ — ንገረኝ ምን ነው አለን?</div>
+        <div>እኔ ጓደኛህ ነኝ — ንገረኝ ምን ነው አለን?</div>
         <div class="sub">ማንኛውንም ነገር ብትጠይቀኝ እንሞግራለን</div>
       </div>
     </main>
@@ -554,22 +550,22 @@
     </div>
   </div>
 
-  <!-- Welcome / Onboarding Modal (shown on first run) -->
+  <!-- Welcome / Onboarding Modal -->
   <div class="modal-backdrop welcome-modal" id="welcomeModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
       <h2 id="welcomeTitle">ሰላም ብሮ! 👋 እንተዋወር</h2>
-      <p class="lead">ከመጀመሪያ ስምህን ንገረኝ — እንድታውቅህ።<br>API key ቀድሞ አዘጋጃለሁ — አንተ ስምህን ብቻ ንገረኝ።</p>
+      <p class="lead">ከመጀመሪያ ስምህን ንገረኝ — እንድታውቅህ።</p>
 
       <div class="field">
         <div class="step">① ስምህ / Your name<span class="required-star">*</span></div>
         <div class="input-wrap">
-          <input id="userName" type="text" placeholder="ለምሳሌ፡ አበበ" autocomplete="off" maxlength="40" />
+          <input id="userName" type="text" placeholder="ለምሳሌ፡ ዳዊት" autocomplete="off" maxlength="40" />
         </div>
       </div>
 
       <div class="field">
         <div class="step">② ራስህን አስተዋውቅ · Tell me about yourself <span style="color: var(--text-mute); font-weight: 400; text-transform: none; letter-spacing: 0;">(optional)</span></div>
-        <textarea id="userIntro" placeholder="ስለ ራስህ ትንሽ ንገረኝ — ሥራ፣ ህልም፣ ምን ይወዳል…"></textarea>
+        <textarea id="userIntro" placeholder="ስለ ራስህ ትንሽ ንገረኝ — ሥራ፣ ትምህርት፣ ፍላጎት…"></textarea>
       </div>
 
       <div class="status-line" id="welcomeStatus"></div>
@@ -589,15 +585,12 @@
       <div class="name-pill" id="namePill"><span class="dot"></span><span id="namePillText">ስም አልተመዘገበም</span></div>
 
       <div class="field">
-        <label for="apiKeyInput">🔑 Gemini API Key <span id="apiKeyStatus" style="color: var(--text-mute); font-weight: 400; text-transform: none; letter-spacing: 0;">(shared — built-in)</span></label>
+        <label for="apiKeyInput">🔑 Gemini API Key <span id="apiKeyStatus" style="color: var(--text-mute); font-weight: 400; text-transform: none; letter-spacing: 0;">(Shared key built-in)</span></label>
         <div class="input-wrap">
-          <input id="apiKeyInput" type="password" placeholder="(leave empty to use the built-in shared key)" autocomplete="off" spellcheck="false" />
+          <input id="apiKeyInput" type="password" placeholder="(ለመለወጥ አዲስ ቁልፍ እዚህ ለጥፍ)" autocomplete="off" spellcheck="false" />
           <button type="button" class="toggle-vis" id="toggleKeyVis" aria-label="Show/hide key">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
           </button>
-        </div>
-        <div style="font-size: 11.5px; color: var(--text-mute); margin-top: 6px; line-height: 1.5;">
-          A shared key is already built into the page. Paste a new one here ONLY if the shared key gets banned — it will be saved in this browser only. Get a fresh key: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" style="color: var(--accent-2);">aistudio.google.com/app/apikey</a>
         </div>
       </div>
 
@@ -631,48 +624,45 @@
 <script>
 (() => {
   // -------- Config & State --------
-  // 🌐 Google Gemini API (Google AI Studio)
   const API_URL = "https://generativelanguage.googleapis.com/v1beta/models";
   const LS_NAME = "broai.userName";
   const LS_INTRO = "broai.userIntro";
   const LS_HIST = "broai.history";
-
-  // 🔐 Shared API key — used for ALL visitors.
-  //    If Google bans this one, paste a new key in ⚙️ Settings (saved per-browser)
-  //    OR replace HARDCODED_API_KEY below and re-upload.
-  // 👉 Get a new key: https://aistudio.google.com/app/apikey
-  const HARDCODED_API_KEY = "AIzaSyACJ_OsNh15YfXgcu8tvSUAXTeXB_n-n6A";
   const LS_KEY = "broai.apiKey";
 
-  // 🧠 Model — tried in order; first one to return non-empty wins.
-  //    All verified working with the key above (as of build time).
+  // 🔐 Your working Gemini API key
+  const HARDCODED_API_KEY = "AQ.Ab8RN6KGVPY_JtJaICT8hzx2aVlR88J6uFi9Y59j95-A3IpfTg";
+
+  // Clear obsolete key from localStorage if it exists
+  try {
+    const cached = localStorage.getItem(LS_KEY);
+    if (cached && (cached.includes("PASTE_") || cached.includes("AQ.Ab8RN6KoKkJf"))) {
+      localStorage.removeItem(LS_KEY);
+    }
+  } catch {}
+
+  // 🧠 Verified Gemini API Models (tested & prioritized)
   const MODEL_FALLBACKS = [
-    "gemini-3.8-flash",
-    "gemini-3.7-flash",
-    "gemini-3.5-flash",
-    "gemini-3.5-flash-lite",
-    "gemini-3.1-flash-lite",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash-lite",
+    "gemini-1.5-pro"
   ];
 
   // Bro AI Persona — system prompt
-  const SYSTEM_PROMPT = `You are "የኔ ጓደኛ" (My Best Friend Bro AI) — a close Ethiopian best friend to the user. \
-You speak naturally in Amharic and Amharlish (አማርሊሽ), blending casual Addis Ababa street slang.
+  const SYSTEM_PROMPT = `You are "የኔ ጓደኛ" (My Best Friend Bro AI) — a close Ethiopian best friend chatting with the user. \
+You speak naturally in Amharic and Amharlish (አማርሊሽ), blending casual Addis Ababa street vibe.
 
-Personality rules (NEVER break these):
-- You are witty, funny, supportive, chill — like a true homie who has the user's back.
-- You NEVER speak like a robotic customer service agent, formal assistant, or textbook.
-- You casually use words like: አቦ, ብሮ, ተወው እስቲ, እንዴ, ሃሌ, ምን ነው አለን, አይደለም አቦ, ይቅርታ, ቻ, እሺ ጓደኛ, ያም ነው, ቻ ቻ, እንቁላለን, ተረጋግታ, በሄድኩ, ላይ ነው, ጥሩ ነው, እባክህ, አለህ? — naturally and only when it fits.
-- You mix English words in when the vibe calls for it (Amharlish), but the default is Amharic.
-- You ask short, friendly follow-up questions to keep the convo alive.
-- You give real talk: if something is dumb, say it with love. If something is genius, hype it up.
-- You remember what the user said earlier in the conversation and reference it.
-- Keep replies conversational — usually 1-4 sentences, occasionally longer when storytelling or giving advice.
-- You never use bullet points, JSON, or formal structure. Just talk like a friend.
-- Default opener style: casual greeting + tiny acknowledgment of what they said + a quick reply + soft follow-up.
+Personality rules:
+- You are witty, funny, supportive, and chill — like a true homie who has the user's back.
+- You NEVER speak like a robotic assistant, formal representative, or textbook.
+- Casually use words like: አቦ, ብሮ, ተወው እስቲ, እንዴ, ምን ነው አለን, አይደለም አቦ, እሺ ጓደኛ, ተረጋጋ, አለህ? naturally and smoothly.
+- You mix modern Amharlish terms when appropriate, keeping the default mostly Amharic.
+- Keep replies punchy and conversational (1 to 4 sentences like a real chat message).
+- Never use markdown bullet points, stars list, or JSON structure. Just converse naturally like a close buddy.`;
 
-If the user writes in English, reply mostly in Amharlish. If they write in Amharic, lean Amharic with light Amharlish seasoning.`;
-
-  // -------- DOM --------
+  // -------- DOM Elements --------
   const $ = (id) => document.getElementById(id);
   const chatEl = $("chat");
   const inputEl = $("input");
@@ -685,13 +675,11 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   const toastEl = $("toast");
   const welcomeEl = $("welcome");
   const statusText = $("statusText");
-  // Welcome modal
   const welcomeModal = $("welcomeModal");
   const userNameEl = $("userName");
   const userIntroEl = $("userIntro");
   const welcomeSaveBtn = $("welcomeSave");
   const welcomeStatus = $("welcomeStatus");
-  // Settings — name + intro + key
   const userNameSettingsEl = $("userNameSettings");
   const userIntroSettingsEl = $("userIntroSettings");
   const apiKeyInputEl = $("apiKeyInput");
@@ -705,7 +693,6 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
   let busy = false;
   let typingEl = null;
 
-  // -------- API key status indicator --------
   function refreshKeyStatus() {
     if (!apiKeyStatusEl) return;
     let override = "";
@@ -713,26 +700,21 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (override) {
       apiKeyStatusEl.textContent = "· ብጁ key በመጠቀም ላይ ✓";
       apiKeyStatusEl.style.color = "var(--success)";
-    } else if (HARDCODED_API_KEY && HARDCODED_API_KEY.length > 10) {
-      apiKeyStatusEl.textContent = "· shared key በመጠቀም ላይ ✓";
-      apiKeyStatusEl.style.color = "var(--success)";
     } else {
-      apiKeyStatusEl.textContent = "· አልተቀመጠም";
-      apiKeyStatusEl.style.color = "var(--text-mute)";
+      apiKeyStatusEl.textContent = "· Shared key ገብቷል ✓";
+      apiKeyStatusEl.style.color = "var(--success)";
     }
   }
 
-  // Show/hide toggle for the settings key input
-  function bindKeyToggle(btnId, inputEl) {
+  function bindKeyToggle(btnId, input) {
     const btn = $(btnId);
-    if (!btn || !inputEl) return;
+    if (!btn || !input) return;
     btn.addEventListener("click", () => {
-      inputEl.type = inputEl.type === "password" ? "text" : "password";
+      input.type = input.type === "password" ? "text" : "password";
     });
   }
   bindKeyToggle("toggleKeyVis", apiKeyInputEl);
 
-  // -------- Helpers --------
   function loadHistory() {
     try {
       const raw = localStorage.getItem(LS_HIST);
@@ -741,11 +723,12 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
       return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
   }
+
   function saveHistory() {
     try { localStorage.setItem(LS_HIST, JSON.stringify(history.slice(-30))); } catch {}
   }
+
   function getCreds() {
-    // Order: per-browser override (paste-in-settings) → hardcoded shared key
     let apiKey = HARDCODED_API_KEY || "";
     try {
       const override = (localStorage.getItem(LS_KEY) || "").trim();
@@ -753,19 +736,17 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     } catch {}
     return { apiKey };
   }
-  function hasKey() {
-    const { apiKey } = getCreds();
-    return apiKey && apiKey.length > 10 && !apiKey.includes("PASTE_");
-  }
+
   function buildSystemPrompt() {
     const nameLine = userName
-      ? `The user's name is: ${userName}. Use their name naturally in conversation — at the first reply, greet them by name. Don't overuse it; sprinkle it like a real friend would.`
-      : "The user has not told you their name yet — gently ask once.";
+      ? `The user's name is: ${userName}. Greet them by name naturally like an old friend.`
+      : "The user has not stated their name yet.";
     const introLine = userIntro
-      ? `What the user told you about themselves: """${userIntro}""". Reference these details naturally when relevant.`
+      ? `About the user: """${userIntro}""". Feel free to reference this naturally.`
       : "";
     return `${SYSTEM_PROMPT}\n\n${nameLine}\n${introLine}`.trim();
   }
+
   function nowTime() {
     const d = new Date();
     let h = d.getHours();
@@ -790,18 +771,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     });
   }
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  // -------- Render --------
   function renderAll() {
-    // remove existing message rows but keep date divider + welcome
     chatEl.querySelectorAll(".msg-row").forEach(n => n.remove());
     if (history.length === 0) {
       welcomeEl.style.display = "";
@@ -822,7 +792,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     const bubble = document.createElement("div");
     const inner = document.createElement("div");
     inner.className = "bubble";
-    inner.textContent = content; // safe — uses textContent
+    inner.textContent = content;
     const meta = document.createElement("div");
     meta.className = "meta";
     meta.textContent = (role === "user" ? "አንተ · " : "ጓደኛ · ") + nowTime();
@@ -847,25 +817,21 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     chatEl.appendChild(typingEl);
     scrollToBottom();
   }
+
   function hideTyping() {
     if (typingEl) { typingEl.remove(); typingEl = null; }
   }
 
-  // -------- Composer auto-resize --------
   function autoResize() {
     inputEl.style.height = "auto";
     inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
   }
   inputEl.addEventListener("input", autoResize);
 
-  // -------- Modal --------
   function openModal() {
     userNameSettingsEl.value = userName;
     userIntroSettingsEl.value = userIntro;
-    if (apiKeyInputEl) {
-      apiKeyInputEl.value = "";
-      apiKeyInputEl.placeholder = "(የተካተተ key አለ — ለመቀየር አዲስ ለጥፍ ወይም ባዶ ይተዉ)";
-    }
+    if (apiKeyInputEl) apiKeyInputEl.value = "";
     refreshKeyStatus();
     statusLine.textContent = "";
     statusLine.className = "status-line";
@@ -873,6 +839,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     modal.classList.add("open");
     setTimeout(() => userNameSettingsEl.focus(), 50);
   }
+
   function closeModal() { modal.classList.remove("open"); }
 
   settingsBtn.addEventListener("click", openModal);
@@ -881,43 +848,33 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
   });
 
-  $("testBtn").addEventListener("click", testApi);
-
-  // Welcome modal handlers
-  function setWelcomeStatus(text, kind = "") {
-    welcomeStatus.textContent = text;
-    welcomeStatus.className = "status-line " + kind;
-  }
-
   welcomeSaveBtn.addEventListener("click", async () => {
     const name = userNameEl.value.trim();
     const intro = userIntroEl.value.trim();
 
     if (!name) {
-      setWelcomeStatus("⚠️ ስምህን አስገባ ብሮ", "err");
+      welcomeStatus.textContent = "⚠️ ስምህን አስገባ ብሮ";
+      welcomeStatus.className = "status-line err";
       userNameEl.focus();
       return;
     }
 
     welcomeSaveBtn.disabled = true;
-    setWelcomeStatus("በማዘጋጀት ላይ…", "ok");
+    welcomeStatus.textContent = "በማዘጋጀት ላይ…";
+    welcomeStatus.className = "status-line ok";
 
-    // Persist user info
     localStorage.setItem(LS_NAME, name);
     localStorage.setItem(LS_INTRO, intro);
     userName = name;
     userIntro = intro;
 
-    // Close welcome modal
     welcomeModal.classList.remove("open");
-    showToast("ተቆጥቷል · ሰላም " + name + "!", "success");
+    showToast("ሰላም " + name + "!", "success");
 
-    // Compose the user's introduction message
-    const introMsg = intro && intro.length > 0
-      ? `ሰላም! ስሜ ${name} ነው። ${intro}`
-      : `ሰላም! ስሜ ${name} ነው። አንተ ማን ነህ? እንድታውቀኝ ትንሽ ንገረኝ።`;
+    const introMsg = intro.length > 0
+      ? `ሰላም ብሮ! ስሜ ${name} ነው። ${intro}`
+      : `ሰላም ብሮ! ስሜ ${name} ነው።`;
 
-    // Auto-send the introduction so the friend greets back
     await sendMessage(introMsg);
   });
 
@@ -931,30 +888,25 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     localStorage.setItem(LS_INTRO, newIntro);
     userIntro = newIntro;
 
-    // API key — only update if user actually typed something
     const typedKey = (apiKeyInputEl?.value || "").trim();
     if (typedKey) {
       localStorage.setItem(LS_KEY, typedKey);
       refreshKeyStatus();
     }
 
-    statusLine.textContent = "✅ ተቆጥቷል — አሁን ልንወያይ";
+    statusLine.textContent = "✅ ተቀምጧል";
     statusLine.className = "status-line ok";
-    showToast("Settings saved · ተቆጥቷል", "success");
+    showToast("Settings saved", "success");
     refreshNamePill();
-    setTimeout(closeModal, 700);
+    setTimeout(closeModal, 600);
   });
 
   function refreshNamePill() {
-    if (userName) {
-      namePillText.textContent = "ስም · " + userName;
-    } else {
-      namePillText.textContent = "ስም አልተመዘገበም";
-    }
+    namePillText.textContent = userName ? ("ስም · " + userName) : "ስም አልተመዘገበም";
   }
 
   clearBtn.addEventListener("click", () => {
-    if (!confirm("ሁሉም ውይይት ላጥም? Clear all messages?")) return;
+    if (!confirm("ውይይቱን በሙሉ ማጽዳት ትፈልጋለህ?")) return;
     history = [];
     saveHistory();
     renderAll();
@@ -962,41 +914,33 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     showToast("Chat cleared", "success");
   });
 
-  // -------- Send --------
-  // Gemini error → friendly message
-  function decodeGeminiError(errObj) {
-    if (!errObj) return null;
-    const code = errObj.code;
-    const msg = errObj.message || "Unknown error";
-    const isDeadKey = msg.includes("OAuth 2") || msg.includes("authentication credentials") ||
-                      errObj?.details?.[0]?.reason === "ACCESS_TOKEN_TYPE_UNSUPPORTED";
-    const codeMap = {
-      400: "⚙️ Bad request — prompt ወይም model name ን ተመልከት",
-      401: isDeadKey
-        ? "🚨 API key ተሰርዟል — aistudio.google.com/app/apikey ሄዶ አዲስ key ፍጠር እና HARDCODED_API_KEY ቀይር"
-        : "🔑 Invalid API key",
-      403: "🚫 Permission denied — API key የተገደበ ሊሆን ይችላል",
-      404: "❓ Model not found — MODEL_FALLBACKS ን ተመልከት",
-      429: "⏱️ Rate limit — ቆይተህ እንደገና ሞክር",
-      500: "🔥 Server error — እንደገና ሞክር",
-      503: "🔥 Service unavailable — እንደገና ሞክር",
-    };
-    const friendly = codeMap[code] || `API error ${code}`;
-    return `${friendly}`;
-  }
+  // Ensure alternating turns between user and model (Required by Gemini API)
+  function buildGeminiBody(systemText, messages) {
+    const contents = [];
+    let lastRole = null;
 
-  // Build Gemini request body
-  function buildGeminiBody(systemText, messages, model) {
-    const contents = messages.map(m => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
+    for (const m of messages) {
+      const role = m.role === "assistant" ? "model" : "user";
+      const text = (m.content || "").trim();
+      if (!text) continue;
+
+      if (role === lastRole && contents.length > 0) {
+        contents[contents.length - 1].parts[0].text += "\n" + text;
+      } else {
+        contents.push({ role, parts: [{ text }] });
+        lastRole = role;
+      }
+    }
+
+    if (contents.length > 0 && contents[0].role === "model") {
+      contents.unshift({ role: "user", parts: [{ text: "ሰላም" }] });
+    }
+
     const body = {
       contents,
       generationConfig: {
-        temperature: 0.9,
+        temperature: 0.85,
         topP: 0.95,
-        topK: 64,
         maxOutputTokens: 1024,
       },
     };
@@ -1006,19 +950,18 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     return body;
   }
 
-  // Extract text reply from Gemini response
   function extractGeminiReply(data) {
-    const parts = data?.candidates?.[0]?.content?.parts;
+    const candidate = data?.candidates?.[0];
+    if (candidate?.finishReason === "SAFETY") {
+      throw new Error("ይዘቱ በደህንነት ፖሊሲ ምክንያት ተከልክሏል");
+    }
+    const parts = candidate?.content?.parts;
     if (!Array.isArray(parts)) return "";
-    return parts
-      .map(p => (p && typeof p.text === "string" ? p.text : ""))
-      .filter(Boolean)
-      .join("\n")
-      .trim();
+    return parts.map(p => (p && typeof p.text === "string" ? p.text : "")).filter(Boolean).join("\n").trim();
   }
 
   async function callGemini(systemText, messages, apiKey, model) {
-    const body = buildGeminiBody(systemText, messages, model);
+    const body = buildGeminiBody(systemText, messages);
     const url = `${API_URL}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
     const res = await fetch(url, {
@@ -1030,10 +973,8 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (!res.ok) {
       let payload = null;
       try { payload = await res.json(); } catch {}
-      const friendly = decodeGeminiError(payload?.error) || `HTTP ${res.status}`;
-      const err = new Error(friendly);
+      const err = new Error(payload?.error?.message || `HTTP ${res.status}`);
       err._http = res.status;
-      err._payload = payload;
       throw err;
     }
 
@@ -1044,14 +985,11 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (!text || busy) return;
 
     const { apiKey } = getCreds();
-    if (!hasKey()) {
-      const msg = "🔑 API key የለም — ⚙️ Settings ላይ አዲስ key አስገባ ወይም HARDCODED_API_KEY ተካትቷል መሆኑን አረጋግጥ";
-      showToast(msg, "error");
-      addBubble("friend", msg);
+    if (!apiKey) {
+      showToast("API key የለም", "error");
       return;
     }
 
-    // Add user message
     history.push({ role: "user", content: text });
     addBubble("user", text);
     saveHistory();
@@ -1063,70 +1001,50 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     showTyping();
 
     try {
-      // Build messages for Gemini (system goes in systemInstruction, not in contents)
       const recent = history.slice(-20);
       const sysText = buildSystemPrompt();
-      const msgs = recent.map(m => ({ role: m.role, content: m.content }));
 
-      // Try each model in fallback order
       let data = null;
       let usedModel = null;
       let lastErr = null;
+
       for (const model of MODEL_FALLBACKS) {
         try {
-          const result = await callGemini(sysText, msgs, apiKey, model);
+          const result = await callGemini(sysText, recent, apiKey, model);
           const reply = extractGeminiReply(result);
           if (reply) {
             data = result;
             usedModel = model;
             break;
           }
-          // Empty content but no HTTP error — try next model
-          lastErr = new Error(`Model ${model} returned no content`);
-          lastErr._payload = result;
         } catch (e) {
+          console.warn(`Model ${model} failed:`, e);
           lastErr = e;
-          // 4xx errors (bad auth, bad params) — don't loop forever
-          if (e._http && e._http >= 400 && e._http < 500) break;
+          // Stop looping only on invalid key/auth error
+          if (e._http === 401 || e._http === 403) break;
         }
       }
 
       hideTyping();
 
-      if (!data) {
-        if (lastErr?._payload) {
-          console.error("Gemini debug payload:", JSON.stringify(lastErr._payload, null, 2));
-        }
-        throw lastErr || new Error("All models failed");
-      }
+      if (!data) throw lastErr || new Error("ምላሽ ማግኘት አልተቻለም");
 
-      const cleanReply = String(extractGeminiReply(data)).trim();
-      if (!cleanReply) throw new Error("Empty response from API");
-
-      console.log("✓ Reply from model:", usedModel);
-
+      const cleanReply = extractGeminiReply(data);
       history.push({ role: "assistant", content: cleanReply });
       addBubble("friend", cleanReply);
       saveHistory();
       statusText.textContent = "እያወራ ነው · online";
     } catch (err) {
       hideTyping();
-      const msg = err?.message || "Unknown error";
-      const friendly =
-        /api.?key|invalid.?key|401|403|permission/i.test(msg)
-          ? "🔑 API key ችግር አለው — key ትክክል መሆኑን አረጋግጥ"
-          : /rate.?limit|429/i.test(msg)
-          ? "⏱️ Rate limit — ቆይተህ እንደገና ሞክር"
-          : /network|failed.?fetch|networkerror/i.test(msg)
-          ? "📡 ኔትዎርክ ችግር አለው — እንደገና ሞክር"
-          : /model.?not.?found|404/i.test(msg)
-          ? "❓ Model not found — owner ን አነጋግር"
-          : /safety|blocked|content/i.test(msg)
-          ? "🛡️ Content ተከለከለ — ሌላ ይሞክር"
-          : `😵 ችግር: ${msg} (console ላይ ዝርዝር ተመልክቷል)`;
+      const msg = err?.message || "";
+      const friendly = /key|401|403/i.test(msg)
+        ? "🔑 API Key ልክ አይደለም ወይም ታግዷል"
+        : /429/i.test(msg)
+        ? "⏱️ እባክህ ትንሽ ቆይተህ ሞክር (Rate limit)"
+        : "⚠️ ችግር ተፈጥሯል፤ እባክህ እንደገና ሞክር።";
       showToast(friendly, "error");
       addBubble("friend", friendly);
-      statusText.textContent = "ላይሆን ተቀይሯል · error";
+      statusText.textContent = "ችግር አጋጥሟል · error";
     } finally {
       busy = false;
       sendBtn.disabled = false;
@@ -1135,7 +1053,6 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     }
   }
 
-  // -------- Test API (debug helper) --------
   async function testApi() {
     const { apiKey } = getCreds();
     if (!apiKey) {
@@ -1146,38 +1063,27 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     statusLine.textContent = "🔄 በመሞከር ላይ…";
     statusLine.className = "status-line";
     try {
-      const msgs = [{ role: "user", content: "ሰላም" }];
       let data = null;
       let usedModel = null;
-      let lastErr = null;
       for (const model of MODEL_FALLBACKS) {
         try {
-          const result = await callGemini("Reply briefly.", msgs, apiKey, model);
-          const reply = extractGeminiReply(result);
-          if (reply) { data = result; usedModel = model; break; }
-          lastErr = new Error(`Model ${model} returned no content`);
-          lastErr._payload = result;
+          const res = await callGemini("Reply: ok", [{ role: "user", content: "hi" }], apiKey, model);
+          if (extractGeminiReply(res)) { data = res; usedModel = model; break; }
         } catch (e) {
-          lastErr = e;
-          if (e._http && e._http >= 400 && e._http < 500) break;
+          if (e._http === 401 || e._http === 403) throw e;
         }
       }
-      if (!data) {
-        if (lastErr?._payload) {
-          console.error("Test API payload:", JSON.stringify(lastErr._payload, null, 2));
-        }
-        throw lastErr || new Error("All models failed");
-      }
-      const reply = String(extractGeminiReply(data)).trim();
-      statusLine.textContent = `✅ OK · model=${usedModel} · reply: "${reply.slice(0, 60)}${reply.length > 60 ? "…" : ""}"`;
+      if (!data) throw new Error("Connection failed");
+      statusLine.textContent = `✅ API በትክክል ይሰራል (${usedModel})`;
       statusLine.className = "status-line ok";
     } catch (e) {
-      statusLine.textContent = `❌ ${e.message || e}`;
+      statusLine.textContent = `❌ ${e.message}`;
       statusLine.className = "status-line err";
     }
   }
 
-  // Send from the input box
+  $("testBtn").addEventListener("click", testApi);
+
   function send() {
     const text = inputEl.value.trim();
     if (!text) return;
@@ -1194,11 +1100,9 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     }
   });
 
-  // -------- Init --------
   function init() {
     renderAll();
     refreshKeyStatus();
-    // First run: must introduce themselves
     if (!userName) {
       welcomeModal.classList.add("open");
       setTimeout(() => userNameEl.focus(), 100);
