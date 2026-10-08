@@ -625,9 +625,12 @@
   const LS_HIST = "broai.history";
 
   // 🔐 Shared credentials — hardcoded so end users just introduce themselves.
-  // ⚠️ Do NOT publish this file publicly. Anyone with the file can read the key.
-  // To rotate, update the value below and re-distribute the file.
-  const HARDCODED_API_KEY = "AQ.Ab8RN6JnxHV1G9-RYuDUNhg3go33sPFJbWP-zXouH3mqA_gfZA";
+  // ⚠️ If you host this on a public URL, Google will auto-disable any key
+  //    that's visible in the page source. Get a new one and paste it below.
+  //
+  // 👉 Get a new key: https://aistudio.google.com/app/apikey
+  // 👉 For long-term hosting, use a backend proxy to hide the key.
+  const HARDCODED_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE";
 
   // 🧠 Model — change if your key has access to a different one.
   // Tried in order; first one to return non-empty wins.
@@ -902,7 +905,7 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     const msg = errObj.message || "Unknown error";
     const codeMap = {
       400: "⚙️ Bad request — prompt ወይም model name ን ተመልከት",
-      401: "🔑 Invalid API key",
+      401: "🔑 API key ተከለከለ — Google exposed keys በራስ-ሰር ያሰርዳል። አዲስ key ከ aistudio.google.com/app/apikey ይዙ።",
       403: "🚫 Permission denied — API key የተገደበ ሊሆን ይችላል",
       404: "❓ Model not found — MODEL_FALLBACKS ን ተመልከት",
       429: "⏱️ Rate limit — ቆይተህ እንደገና ሞክር",
@@ -978,8 +981,10 @@ If the user writes in English, reply mostly in Amharlish. If they write in Amhar
     if (!text || busy) return;
 
     const { apiKey } = getCreds();
-    if (!apiKey) {
-      showToast("⚠️ API key አልተገኘም — owner ን አነጋግር", "error");
+    if (!apiKey || apiKey === "PASTE_YOUR_GEMINI_API_KEY_HERE" || apiKey.includes("PASTE_")) {
+      const msg = "⚠️ Gemini API key አልተቀመጠም። index.html ን ክፈት → 'PASTE_YOUR_GEMINI_API_KEY_HERE' ን ተክትቶ አዲስ key ከ aistudio.google.com/app/apikey አስገባ።";
+      showToast(msg, "error");
+      addBubble("friend", msg);
       return;
     }
 
